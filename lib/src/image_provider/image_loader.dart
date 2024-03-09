@@ -4,6 +4,8 @@ import '../model/cache_base_model.dart';
 
 class CachedImageLoader extends StatefulWidget {
   final String url;
+
+  /// With extension (*.png, *jpg)
   final String fileName;
   final bool? cacheEnabled;
   final Widget? errorWidget;
@@ -28,7 +30,8 @@ class _CachedImageProviderState extends State<CachedImageLoader> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: cacheService.getOrDownloadFile(widget.url, '${widget.fileName}.png', widget.cacheEnabled),
+      future: cacheService.getOrDownloadFile(
+          widget.url, widget.fileName, widget.cacheEnabled),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final cacheBaseModel = snapshot.data as CacheBaseModel;
@@ -36,18 +39,20 @@ class _CachedImageProviderState extends State<CachedImageLoader> {
           return cacheBaseModel.status
               ? Image.file(
                   cacheBaseModel.file,
-                  errorBuilder: (context, error, stackTrace) => widget.errorWidget ?? const Icon(Icons.error_outline),
+                  errorBuilder: (context, error, stackTrace) =>
+                      widget.errorWidget ?? const Icon(Icons.error_outline),
                   fit: widget.fit ?? BoxFit.cover,
                 )
               : Image.network(
                   widget.url,
                   fit: widget.fit ?? BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => widget.errorWidget ?? const Icon(Icons.error_outline),
+                  errorBuilder: (context, error, stackTrace) =>
+                      widget.errorWidget ?? const Icon(Icons.error_outline),
                 );
         } else if (snapshot.hasError) {
           return widget.errorWidget ?? const Icon(Icons.error_outline);
         } else {
-          return const Center(child: CircularProgressIndicator.adaptive());
+          return const SizedBox();
         }
       },
     );

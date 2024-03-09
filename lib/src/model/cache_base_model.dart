@@ -1,7 +1,7 @@
-class CacheBaseModel {
+class CacheBaseModel<T> {
   final bool status;
 
-  final dynamic file;
+  final T file;
 
   CacheBaseModel({
     required this.status,
